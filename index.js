@@ -9,12 +9,13 @@ const childProcess = require('child_process')
 const argv = process.argv
 const mylog = console.log
 
-let _currentPath = process.cwd()
+const _workingDir = process.cwd()
+let _currentPath = _workingDir
 
-// function chdir (path) {
-//   _currentPath = path
-// }
-//
+function chdir (path) {
+  _currentPath = path
+}
+
 function call (cmdstring) {
   mylog(cmdstring)
   const opts = {
@@ -93,6 +94,10 @@ for (const n in result) {
   const opts = {
     filter
   }
+  chdir(source)
+  call('npm install')
+  call('npm run build')
+  chdir(_workingDir)
   mylog('Copying ' + source + " to " + dest)
   ncp(source, dest, opts, function (err) {
     mylog(err)
