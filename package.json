@@ -1,0 +1,14 @@
+{
+  "name": "dotdotdep",
+  "version": "1.0.0",
+  "description": "Copy dependencies from the .. of a repo into the node_modules directory",
+  "bin": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Paul Puey <paul@airbitz.co",
+  "license": "ISC",
+  "dependencies": {
+    "ncp": "^2.0.0"
+  }
+}
