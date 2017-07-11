@@ -73,7 +73,11 @@ const result = arrayIntersect(dotdotArray, modulesArray)
 // mylog(result)
 
 function filter (file) {
-  mylog('filter: ' + file)
+  if (file.includes('/node_modules')) {
+    return false
+  } else if (file.includes('.git')) {
+    return false
+  }
   return true
 }
 
