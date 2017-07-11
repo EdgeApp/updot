@@ -82,7 +82,6 @@ function filter (file) {
 }
 
 mylog('Found ' + result.length + ' intersecting repos')
-call('wml rm all')
 let numReposWatched = 0
 for (const n in result) {
   const dir = result[n]
@@ -94,6 +93,7 @@ for (const n in result) {
   const opts = {
     filter
   }
+  mylog('Copying ' + source + " to " + dest)
   ncp(source, dest, opts, function (err) {
     mylog(err)
   })
