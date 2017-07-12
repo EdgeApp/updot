@@ -73,16 +73,46 @@ const result = arrayIntersect(dotdotArray, modulesArray)
 
 // mylog(result)
 
+let excludeFiles = [
+  '/node_modules',
+  '.git',
+  '.idea',
+  '.vscode',
+  '.babelrc',
+  '.eslintrc.json',
+  '.flowconfig'
+]
+
+let packageJsonFiles
+
 function filter (file) {
-  if (file.includes('/node_modules')) {
+
+  if (packageJsonFiles) {
+    for (const n in packageJsonFiles) {
+      const f = packageJsonFiles[n]
+      const s = f.replace('*', '')
+      if (file.includes('package.json')) {
+        return true
+      }
+      if (file.includes(s)) {
+        return true
+      }
+    }
     return false
-  } else if (file.includes('.git')) {
-    return false
+  } else {
+    for (const n in excludeFiles) {
+      const f = excludeFiles[n]
+      if (file.includes(f)) {
+        return false
+      }
+    }
   }
   return true
 }
 
-mylog('Found ' + result.length + ' intersecting repos')
+mylog('Found intersecting repos:')
+mylog(result)
+
 let numReposWatched = 0
 for (const n in result) {
   const dir = result[n]
@@ -95,10 +125,19 @@ for (const n in result) {
     filter
   }
   chdir(source)
-  call('npm install')
   call('npm run build')
   chdir(_workingDir)
+  packageJson = require('./package.json')
+  if (typeof packageJson.files !== 'undefined') {
+    mylog('Found package.json file Including only mentioned files')
+    packageJsonFiles = packageJson.files
+  } else {
+    mylog('Excluding default files')
+    packageJsonFiles = null
+  }
+
   mylog('Copying ' + source + " to " + dest)
+  call('rm -rf ' + dest)
   ncp(source, dest, opts, function (err) {
     mylog(err)
   })
