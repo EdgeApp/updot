@@ -17,7 +17,7 @@ Script will search in all folders at the peer level to the current project that 
 
 ## To use
 
-    npm install dotdotdev --save
+    npm install dotdotdep --save
 
 Then add a line to your `scripts` section 
 

@@ -1,6 +1,6 @@
 {
   "name": "dotdotdep",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Copy dependencies from the .. of a repo into the node_modules directory",
   "bin": "./index.js",
   "scripts": {
