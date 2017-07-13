@@ -11,6 +11,7 @@ const mylog = console.log
 
 const _workingDir = process.cwd()
 let _currentPath = _workingDir
+let _srcDir = '..'
 
 function chdir (path) {
   _currentPath = path
@@ -58,13 +59,10 @@ function arrayIntersect (a, b) {
 }
 
 if (argv.length > 2) {
-  if (argv[2] === 'stop') {
-    call('wml rm all')
-    return
-  }
+  _srcDir = argv[2]
 }
 
-const dotdot = cmd('ls -1 ..')
+const dotdot = cmd('ls -1 ' + _srcDir)
 const dotdotArray = dotdot.split('\n')
 const modules = cmd('ls -1 node_modules')
 const modulesArray = modules.split('\n')
@@ -119,7 +117,7 @@ for (const n in result) {
   if (dir.length === 0) {
     continue
   }
-  const source = '../' + dir
+  const source = _srcDir + '/' + dir
   const dest = 'node_modules/' + dir
   const opts = {
     filter

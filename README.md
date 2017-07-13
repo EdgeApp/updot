@@ -26,3 +26,9 @@ Then add a line to your `scripts` section
 To update the node_modules
 
     npm run updot
+
+## Options
+
+Change the source directory by passing a directory path as the first argument
+
+    "updot": "dotdotdep ../../myotherfolder",
