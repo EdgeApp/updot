@@ -72,6 +72,7 @@ function arrayIntersect (a, b) {
 
 if (argv.length > 2) {
   _srcDir = argv[2]
+  mylog('Source dir override: ' + _srcDir)
 }
 
 const dotdot = cmd('ls -1 ' + _srcDir)
@@ -147,7 +148,14 @@ async function main () {
     const opts = {
       filter
     }
-    const requirePath = _workingDir + '/' + source
+
+    let requirePath
+    if (source.substr(0, 1) === '/') {
+      requirePath = source
+    } else {
+      requirePath = _workingDir + '/' + source
+    }
+
     mylog('requirePath: ' + requirePath)
 
     const packageJson = require(requirePath + '/package.json')
