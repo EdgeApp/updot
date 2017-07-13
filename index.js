@@ -13,6 +13,17 @@ const _workingDir = process.cwd()
 let _currentPath = _workingDir
 let _srcDir = '..'
 
+function ncpPromise (src, dest, opts) {
+  return new Promise(function (resolve, reject) {
+    ncp(src, dest, opts, function (err, data) {
+      if (err !== null) {
+        return reject(err)
+      }
+      resolve(data)
+    })
+  })
+}
+
 function chdir (path) {
   _currentPath = path
 }
@@ -43,7 +54,7 @@ function cmd (cmdstring) {
 
 function hashCode(string){
   var hash = 0;
-  if (string.length == 0) return hash;
+  if (string.length === 0) return hash;
   for (i = 0; i < string.length; i++) {
     let char = string.charCodeAt(i);
     hash = ((hash<<5)-hash)+char;
@@ -112,37 +123,39 @@ mylog('Found intersecting repos:')
 mylog(result)
 
 let numReposWatched = 0
-for (const n in result) {
-  const dir = result[n]
-  if (dir.length === 0) {
-    continue
-  }
-  const source = _srcDir + '/' + dir
-  const dest = 'node_modules/' + dir
-  const opts = {
-    filter
-  }
-  chdir(source)
-  call('npm run build')
-  chdir(_workingDir)
-  packageJson = require('./package.json')
-  if (typeof packageJson.files !== 'undefined') {
-    mylog('Found package.json file Including only mentioned files')
-    packageJsonFiles = packageJson.files
-  } else {
-    mylog('Excluding default files')
-    packageJsonFiles = null
-  }
 
-  mylog('Copying ' + source + " to " + dest)
-  call('rm -rf ' + dest)
-  ncp(source, dest, opts, function (err) {
-    mylog(err)
-  })
-  // const c = 'wml add ../' + dir + ' ' + 'node_modules/' + dir
-  // call(c)
+main()
+
+async function main () {
+  for (const n in result) {
+    const dir = result[n]
+    if (dir.length === 0) {
+      continue
+    }
+    const source = _srcDir + '/' + dir
+    const dest = 'node_modules/' + dir
+    const opts = {
+      filter
+    }
+    chdir(source)
+    call('npm run build')
+    chdir(_workingDir)
+    const packageJson = require('./package.json')
+    if (typeof packageJson.files !== 'undefined') {
+      mylog('Found package.json file Including only mentioned files')
+      packageJsonFiles = packageJson.files
+    } else {
+      mylog('Excluding default files')
+      packageJsonFiles = null
+    }
+
+    mylog('Copying ' + source + " to " + dest)
+
+    try {
+      await ncpPromise(source, dest, opts)
+    } catch (e) {
+      mylog(e)
+    }
+  }
 }
-// mylog('Watching ' + numReposWatched + ' repos')
-//
-// call('wml start')
 
