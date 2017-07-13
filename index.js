@@ -25,6 +25,7 @@ function ncpPromise (src, dest, opts) {
 }
 
 function chdir (path) {
+  mylog('chdir: ' + path)
   _currentPath = path
 }
 
@@ -95,23 +96,29 @@ let excludeFiles = [
 let packageJsonFiles
 
 function filter (file) {
-
-  if (packageJsonFiles) {
-    for (const n in packageJsonFiles) {
-      const f = packageJsonFiles[n]
-      const s = f.replace('*', '')
-      if (file.includes('package.json')) {
-        return true
-      }
-      if (file.includes(s)) {
-        return true
-      }
-    }
-    return false
-  } else {
+  // if (packageJsonFiles) {
+  //   mylog('filter: packageJsonFiles:')
+  //   mylog(packageJsonFiles)
+  //   for (const n in packageJsonFiles) {
+  //     const f = packageJsonFiles[n]
+  //     const s = f.replace('*', '')
+  //     if (file.includes('package.json')) {
+  //       mylog('filter: ' + file + 'true 1')
+  //       return true
+  //     }
+  //     if (file.includes(s)) {
+  //       mylog('filter: ' + file + 'true 2')
+  //       return true
+  //     }
+  //   }
+  //   mylog('filter: ' + file + 'false 1')
+  //   return false
+  // } else
+  {
     for (const n in excludeFiles) {
       const f = excludeFiles[n]
       if (file.includes(f)) {
+        mylog('copy: ' + file + ' SKIP')
         return false
       }
     }
@@ -132,15 +139,30 @@ async function main () {
     if (dir.length === 0) {
       continue
     }
+    mylog('****************************')
+    mylog('*** Processing: ' + dir)
+    mylog('****************************')
     const source = _srcDir + '/' + dir
     const dest = 'node_modules/' + dir
     const opts = {
       filter
     }
-    chdir(source)
-    call('npm run build')
+    const requirePath = _workingDir + '/' + source
+    mylog('requirePath: ' + requirePath)
+
+    const packageJson = require(requirePath + '/package.json')
+
+    chdir(requirePath)
+    if (typeof packageJson.scripts !== 'undefined') {
+      if (typeof packageJson.scripts.prepare !== 'undefined') {
+        call('npm run prepare')
+      } else if (typeof packageJson.scripts.build !== 'undefined') {
+        call('npm run build')
+      }
+    }
+
     chdir(_workingDir)
-    const packageJson = require('./package.json')
+    // const packageJson = require('./package.json')
     if (typeof packageJson.files !== 'undefined') {
       mylog('Found package.json file Including only mentioned files')
       packageJsonFiles = packageJson.files
@@ -149,6 +171,7 @@ async function main () {
       packageJsonFiles = null
     }
 
+    mylog('rm -rf ' + dest + '/')
     mylog('Copying ' + source + " to " + dest)
 
     try {
