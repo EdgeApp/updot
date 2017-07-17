@@ -18,7 +18,7 @@ Script will search in all folders at the peer level to the current project that 
 
 ## To use
 
-    npm install updot --save
+    npm install updot --save-dev
 
 Then add a line to your `scripts` section 
 
