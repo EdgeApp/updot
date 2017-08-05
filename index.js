@@ -116,8 +116,7 @@ function filter (file) {
   //   return false
   // } else
   {
-    for (const n in excludeFiles) {
-      const f = excludeFiles[n]
+    for (let f of excludeFiles) {
       if (file.includes(f)) {
         mylog('copy: ' + file + ' SKIP')
         return false
@@ -135,14 +134,13 @@ let numReposWatched = 0
 main()
 
 async function main () {
-  for (const n in result) {
-    const dir = result[n]
+  for (let dir of result) {
     if (dir.length === 0) {
       continue
     }
-    mylog('****************************')
+    mylog('*********************************************************')
     mylog('*** Processing: ' + dir)
-    mylog('****************************')
+    mylog('*********************************************************')
     const source = _srcDir + '/' + dir
     const dest = 'node_modules/' + dir
     const opts = {
