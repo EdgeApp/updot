@@ -12,6 +12,7 @@ const mylog = console.log
 const _workingDir = process.cwd()
 let _currentPath = _workingDir
 let _srcDir = '..'
+let _forceDir = null
 
 function ncpPromise (src, dest, opts) {
   return new Promise(function (resolve, reject) {
@@ -71,15 +72,23 @@ function arrayIntersect (a, b) {
 }
 
 if (argv.length > 2) {
-  _srcDir = argv[2]
-  mylog('Source dir override: ' + _srcDir)
+  if (argv[2] === '-f') {
+    console.log('Using forced dir:' + argv[3])
+    _forceDir = argv[3]
+  } else {
+    _srcDir = argv[2]
+    mylog('Source dir override: ' + _srcDir)
+  }
 }
 
 const dotdot = cmd('ls -1 ' + _srcDir)
-const dotdotArray = dotdot.split('\n')
+let dotdotArray = dotdot.split('\n')
 const modules = cmd('ls -1 node_modules')
 const modulesArray = modules.split('\n')
 
+if (_forceDir) {
+  dotdotArray = [_forceDir]
+}
 const result = arrayIntersect(dotdotArray, modulesArray)
 
 // mylog(result)
