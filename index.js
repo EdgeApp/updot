@@ -2,8 +2,7 @@
 /**
  * Created by paul on 7/10/17.
  */
-const fs = require('fs')
-const ncp = require('ncp').ncp
+const fs = require('fs-extra')
 const childProcess = require('child_process')
 
 const argv = process.argv
@@ -16,11 +15,12 @@ let _forceDir = null
 
 function ncpPromise (src, dest, opts) {
   return new Promise(function (resolve, reject) {
-    ncp(src, dest, opts, function (err, data) {
+    fs.copy(src, dest, opts, function (err, data) {
       if (err !== null) {
-        return reject(err)
+        reject(err)
+      } else {
+        resolve(data)
       }
-      resolve(data)
     })
   })
 }
@@ -89,6 +89,10 @@ const modulesArray = modules.split('\n')
 if (_forceDir) {
   dotdotArray = [_forceDir]
 }
+console.log('dotdotArray')
+console.log(dotdotArray)
+console.log('modulesArray')
+console.log(modulesArray)
 const result = arrayIntersect(dotdotArray, modulesArray)
 
 // mylog(result)
@@ -145,6 +149,7 @@ main()
 async function main () {
   for (let dir of result) {
     if (dir.length === 0) {
+      console.log('Skipping directory')
       continue
     }
     mylog('*********************************************************')
@@ -192,8 +197,10 @@ async function main () {
     try {
       await ncpPromise(source, dest, opts)
     } catch (e) {
+      console.log('Error in ncpPromise:' + source + ' ' + dest)
       mylog(e)
     }
+    console.log('**** Complete ' + dir + ' ****')
   }
 }
 
