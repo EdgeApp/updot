@@ -30,6 +30,10 @@ To update the node_modules
 
 ## Options
 
-Change the source directory by passing a directory path as the first argument
+Change the source directory by passing a directory path as an argument after `-s`
 
-    "updot": "updot ../../myotherfolder",
+    "updot": "updot -s ../../myotherfolder",
+
+Updot only a single dependency
+
+    npm run updot -- edge-currency-bitcoin

@@ -72,12 +72,12 @@ function arrayIntersect (a, b) {
 }
 
 if (argv.length > 2) {
-  if (argv[2] === '-f') {
-    console.log('Using forced dir:' + argv[3])
-    _forceDir = argv[3]
-  } else {
-    _srcDir = argv[2]
+  if (argv[2] === '-s') {
+    _srcDir = argv[3]
     mylog('Source dir override: ' + _srcDir)
+  } else {
+    _forceDir = argv[2]
+    console.log('Using forced dir:' + argv[2])
   }
 }
 

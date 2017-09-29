@@ -1,6 +1,6 @@
 {
   "name": "updot",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Update dependencies from the ../ of a repo into the repo's node_modules directory",
   "bin": "./index.js",
   "scripts": {
