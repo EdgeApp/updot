@@ -176,8 +176,6 @@ async function main () {
     if (typeof packageJson.scripts !== 'undefined') {
       if (typeof packageJson.scripts.prepare !== 'undefined') {
         call('npm run prepare')
-      } else if (typeof packageJson.scripts.build !== 'undefined') {
-        call('npm run build')
       }
     }
 

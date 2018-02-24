@@ -1,13 +1,13 @@
 {
   "name": "updot",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Update dependencies from the ../ of a repo into the repo's node_modules directory",
   "bin": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Paul Puey <paul@airbitz.co",
-  "homepage": "https://airbitz.co",
+  "author": "Paul Puey <paul@edgesecure.co",
+  "homepage": "https://edgesecure.co",
   "license": "MIT",
   "dependencies": {
     "fs-extra": "^4.0.1"
