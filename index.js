@@ -13,18 +13,6 @@ let _currentPath = _workingDir
 let _srcDir = '..'
 let _forceDir = null
 
-function ncpPromise (src, dest, opts) {
-  return new Promise(function (resolve, reject) {
-    fs.copy(src, dest, opts, function (err, data) {
-      if (err !== null) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
-  })
-}
-
 function chdir (path) {
   mylog('chdir: ' + path)
   _currentPath = path
@@ -184,6 +172,7 @@ async function main () {
     if (typeof packageJson.files !== 'undefined') {
       mylog('Found package.json file Including only mentioned files')
       packageJsonFiles = packageJson.files
+      packageJsonFiles.push('package.json')
     } else {
       mylog('Excluding default files')
       packageJsonFiles = null
@@ -192,12 +181,36 @@ async function main () {
     mylog('rm -rf ' + dest + '/')
     mylog('Copying ' + source + " to " + dest)
 
-    try {
-      await ncpPromise(source, dest, opts)
-    } catch (e) {
-      console.log('Error in ncpPromise:' + source + ' ' + dest)
-      mylog(e)
+    if (packageJsonFiles) {
+      console.log('packageJsonFiles', packageJsonFiles)
+      let foundPackageJson = false
+      for (let file of packageJsonFiles) {
+        if (file === 'package.json') {
+          foundPackageJson = true
+        }
+        console.log('file: ' + file)
+        if (file.slice(-1) === '*') {
+          // This is a directory wildcard
+          file = file.slice(0, -1)
+        }
+        const src = source + '/' +  file
+        const dst = dest + '/' + file
+        try {
+          fs.copySync(src, dst)
+        } catch (e) {
+          console.log('Error in copySync 1:' + src + ' ' + dst)
+          mylog(e)
+        }
+      }
+    } else {
+      try {
+        fs.copySync(source, dest, opts)
+      } catch (e) {
+        console.log('Error in copySync 3:' + source + ' ' + dest)
+        mylog(e)
+      }
     }
+
     console.log('**** Complete ' + dir + ' ****')
   }
 }

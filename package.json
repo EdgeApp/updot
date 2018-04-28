@@ -1,6 +1,6 @@
 {
   "name": "updot",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Update dependencies from the ../ of a repo into the repo's node_modules directory",
   "bin": "./index.js",
   "scripts": {
@@ -10,6 +10,6 @@
   "homepage": "https://edgesecure.co",
   "license": "MIT",
   "dependencies": {
-    "fs-extra": "^4.0.1"
+    "fs-extra": "^5.0.0"
   }
 }
