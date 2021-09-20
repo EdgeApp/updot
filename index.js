@@ -163,7 +163,7 @@ async function main () {
     chdir(requirePath)
     if (typeof packageJson.scripts !== 'undefined') {
       if (typeof packageJson.scripts.prepare !== 'undefined') {
-        call('npm run prepare')
+        call('EDGE_MODE=development npm run prepare')
       }
     }
 
